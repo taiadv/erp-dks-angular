@@ -1,17 +1,69 @@
 <div class="login-container">
 
-  <div class="login-card">
+    <div class="left-side">
+        <img
+            src="images/login-modelo.jpg"
+            alt="Modelo DKS">
+    </div>
 
-    <h1>DKS ERP</h1>
+    <div class="right-side">
 
-    <p>Sistema de Gestão</p>
+        <img
+            class="logo"
+            src="images/logo.png"
+            alt="DKS">
 
-    <input type="text" placeholder="Usuário">
+        <h1>DKS ERP</h1>
 
-    <input type="password" placeholder="Senha">
+        <p>
+            Sistema de Gestão Comercial
+        </p>
 
-    <button>Entrar</button>
+        <mat-form-field appearance="outline">
 
-  </div>
+            <mat-label>Usuário</mat-label>
+
+            <input
+                matInput
+                placeholder="Digite seu usuário">
+
+            <mat-icon matSuffix>person</mat-icon>
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+
+            <mat-label>Senha</mat-label>
+
+            <input
+                matInput
+                [type]="ocultarSenha ? 'password' : 'text'">
+
+            <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                (click)="ocultarSenha = !ocultarSenha">
+
+                <mat-icon>
+
+                    {{ ocultarSenha ? 'visibility_off' : 'visibility' }}
+
+                </mat-icon>
+
+            </button>
+
+        </mat-form-field>
+
+      <button
+    mat-raised-button
+    class="btn-login"
+    (click)="entrar()">
+
+    Entrar
+
+</button>
+
+    </div>
 
 </div>

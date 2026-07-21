@@ -1,0 +1,37 @@
+.layout{
+    display:flex;
+    height:100vh;
+}
+
+.sidebar{
+    width:260px;
+    background:#dbd1c7;
+    padding:20px;
+    box-sizing:border-box;
+}
+
+.main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+}
+
+.header{
+    height:70px;
+    background:white;
+    border-bottom:1px solid #e5e5e5;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 25px;
+
+    box-sizing:border-box;
+}
+
+.content{
+    flex:1;
+    background:#f7f7f7;
+    padding:30px;
+    box-sizing:border-box;
+}

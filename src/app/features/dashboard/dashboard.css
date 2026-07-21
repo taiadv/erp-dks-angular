@@ -1,0 +1,19 @@
+.dashboard{
+
+    padding:30px;
+
+    background:#F5F7FA;
+
+    min-height:100vh;
+
+}
+
+.cards{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:25px;
+
+}
