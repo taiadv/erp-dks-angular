@@ -1,0 +1,32 @@
+:host {
+  display: block;
+}
+
+mat-dialog-content {
+  min-width: 420px;
+  max-width: 500px;
+  padding-top: 8px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+mat-dialog-actions {
+  padding-top: 12px;
+}
+
+button {
+  font-size: 14px;
+}
