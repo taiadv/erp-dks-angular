@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -24,7 +24,7 @@ import { Categoria } from '../../../models/categoria';
 })
 export class Categorias implements OnInit {
 
-  categorias: Categoria[] = [];
+  dataSource = new MatTableDataSource<Categoria>();
 
   displayedColumns: string[] = [
     'id',
@@ -40,18 +40,29 @@ export class Categorias implements OnInit {
 
   ngOnInit(): void {
     this.listarCategorias();
+
+    // Define que a pesquisa será feita pelo campo "nome"
+    this.dataSource.filterPredicate = (categoria: Categoria, filtro: string) => {
+      return categoria.nome.toLowerCase().includes(filtro);
+    };
   }
 
   listarCategorias(): void {
     this.categoriaService.listarCategorias().subscribe({
-      next: (dados) => {
-        this.categorias = dados;
+      next: (dados: Categoria[]) => {
+        this.dataSource.data = dados;
         this.cdr.detectChanges();
       },
       error: (erro) => {
         console.error('Erro ao carregar categorias', erro);
       }
     });
+  }
+
+  aplicarFiltro(event: Event): void {
+    const valor = (event.target as HTMLInputElement).value;
+
+    this.dataSource.filter = valor.trim().toLowerCase();
   }
 
 }
