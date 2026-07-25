@@ -1,7 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +22,7 @@ import { Categoria } from '../../../models/categoria';
   imports: [
     CommonModule,
     MatTableModule,
+    MatPaginatorModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule
@@ -22,7 +30,10 @@ import { Categoria } from '../../../models/categoria';
   templateUrl: './categorias.html',
   styleUrl: './categorias.css'
 })
-export class Categorias implements OnInit {
+export class Categorias implements OnInit, AfterViewInit {
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
 
   dataSource = new MatTableDataSource<Categoria>();
 
@@ -39,18 +50,23 @@ export class Categorias implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     this.listarCategorias();
 
-    // Define que a pesquisa será feita pelo campo "nome"
     this.dataSource.filterPredicate = (categoria: Categoria, filtro: string) => {
       return categoria.nome.toLowerCase().includes(filtro);
     };
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
   }
 
   listarCategorias(): void {
     this.categoriaService.listarCategorias().subscribe({
       next: (dados: Categoria[]) => {
         this.dataSource.data = dados;
+        this.dataSource.paginator = this.paginator;
         this.cdr.detectChanges();
       },
       error: (erro) => {
@@ -61,8 +77,11 @@ export class Categorias implements OnInit {
 
   aplicarFiltro(event: Event): void {
     const valor = (event.target as HTMLInputElement).value;
-
     this.dataSource.filter = valor.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
 }
