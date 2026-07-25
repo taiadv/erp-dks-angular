@@ -1,0 +1,90 @@
+:host{
+
+    display:block;
+    height:100%;
+
+}
+
+.logo{
+
+    padding:30px 20px;
+
+    text-align:center;
+
+    border-bottom:1px solid rgba(255,255,255,.15);
+
+}
+
+.logo h2{
+
+    margin:0;
+
+    color:white;
+
+    font-size:26px;
+
+}
+
+.logo span{
+
+    color:#ffd6e7;
+
+    font-size:13px;
+
+}
+
+nav{
+
+    margin-top:25px;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+nav a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:15px 20px;
+
+    margin:4px 10px;
+
+    border-radius:12px;
+
+    transition:.25s;
+
+    cursor:pointer;
+
+}
+
+nav a:hover{
+
+    background:white;
+
+    color:#d63384;
+
+}
+
+.ativo{
+
+    background:white;
+
+    color:#d63384;
+
+}
+
+mat-icon{
+
+    font-size:22px;
+
+}

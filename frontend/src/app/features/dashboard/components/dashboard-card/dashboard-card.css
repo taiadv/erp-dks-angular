@@ -1,0 +1,71 @@
+.card{
+
+    background:#FFF;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.05);
+
+    transition:.25s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.icone{
+
+    width:60px;
+
+    height:60px;
+
+    background:#FCE7F3;
+
+    border-radius:15px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+mat-icon{
+
+    color:#D63384;
+
+    font-size:30px;
+
+    width:30px;
+
+    height:30px;
+
+}
+
+span{
+
+    color:#888;
+
+}
+
+h2{
+
+    margin:10px 0;
+
+    color:#2F3542;
+
+}
+
+small{
+
+    color:#22C55E;
+
+}

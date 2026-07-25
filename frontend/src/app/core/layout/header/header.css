@@ -1,0 +1,123 @@
+:host{
+    display:block;
+}
+
+.header{
+
+    height:72px;
+
+    background:#ffffff;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 30px;
+
+    border-bottom:1px solid #E9ECEF;
+
+}
+
+.left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:30px;
+
+}
+
+.left h2{
+
+    margin:0;
+
+    color:#2F3542;
+
+    font-size:26px;
+
+}
+
+.search{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    width:320px;
+
+    background:#F5F7FA;
+
+    border-radius:12px;
+
+    padding:10px 15px;
+
+}
+
+.search input{
+
+    border:none;
+
+    background:transparent;
+
+    width:100%;
+
+    outline:none;
+
+    font-size:14px;
+
+}
+
+.right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+.user{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.avatar{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:#D63384;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-weight:bold;
+
+    font-size:18px;
+
+}
+
+.user small{
+
+    color:#6C757D;
+
+}
