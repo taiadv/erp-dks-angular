@@ -14,6 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { CategoriaService } from '../../../services/categoria';
 import { Categoria } from '../../../models/categoria';
@@ -30,7 +32,9 @@ import { CategoriaForm } from '../categoria-form/categoria-form';
     MatButtonModule,
     MatIconModule,
     MatCardModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './categorias.html',
   styleUrl: './categorias.css'
@@ -45,6 +49,8 @@ export class Categorias implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource<Categoria>();
 
+  carregando = false;
+
   displayedColumns: string[] = [
     'id',
     'nome',
@@ -55,6 +61,7 @@ export class Categorias implements OnInit, AfterViewInit {
   constructor(
     private categoriaService: CategoriaService,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -62,13 +69,19 @@ export class Categorias implements OnInit, AfterViewInit {
 
     this.listarCategorias();
 
-    this.dataSource.filterPredicate = (categoria: Categoria, filtro: string) => {
+    this.dataSource.filterPredicate = (
+      categoria: Categoria,
+      filtro: string
+    ) => {
+
+      const nome = categoria.nome?.toLowerCase() || '';
+      const descricao = categoria.descricao?.toLowerCase() || '';
+
       return (
-        categoria.nome.toLowerCase().includes(filtro) ||
-        categoria.descricao.toLowerCase().includes(filtro)
+        nome.includes(filtro) ||
+        descricao.includes(filtro)
       );
     };
-
   }
 
   ngAfterViewInit(): void {
@@ -78,28 +91,46 @@ export class Categorias implements OnInit, AfterViewInit {
 
   listarCategorias(): void {
 
+    this.carregando = true;
+
     this.categoriaService.listarCategorias().subscribe({
+
       next: (dados) => {
+
         this.dataSource.data = dados;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+
+        this.carregando = false;
+
         this.cdr.detectChanges();
       },
-      error: erro => console.error(erro)
-    });
 
+      error: (erro) => {
+
+        console.error('Erro ao carregar categorias:', erro);
+
+        this.carregando = false;
+
+        this.mostrarMensagem(
+          'Erro ao carregar as categorias.'
+        );
+      }
+
+    });
   }
 
   aplicarFiltro(event: Event): void {
 
     const valor = (event.target as HTMLInputElement).value;
 
-    this.dataSource.filter = valor.trim().toLowerCase();
+    this.dataSource.filter = valor
+      .trim()
+      .toLowerCase();
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-
   }
 
   novaCategoria(): void {
@@ -110,12 +141,58 @@ export class Categorias implements OnInit, AfterViewInit {
     this.abrirFormulario(categoria);
   }
 
+  excluirCategoria(categoria: Categoria): void {
+
+    const confirmar = window.confirm(
+      `Deseja realmente excluir a categoria "${categoria.nome}"?`
+    );
+
+    if (!confirmar) {
+      return;
+    }
+
+    this.carregando = true;
+
+    this.categoriaService
+      .excluirCategoria(categoria.id)
+      .subscribe({
+
+        next: () => {
+
+          this.mostrarMensagem(
+            'Categoria excluída com sucesso!'
+          );
+
+          this.listarCategorias();
+        },
+
+        error: (erro) => {
+
+          console.error(
+            'Erro ao excluir categoria:',
+            erro
+          );
+
+          this.carregando = false;
+
+          this.mostrarMensagem(
+            'Não foi possível excluir a categoria.'
+          );
+        }
+
+      });
+  }
+
   private abrirFormulario(categoria?: Categoria): void {
 
-    const dialogRef = this.dialog.open(CategoriaForm, {
-      width: '500px',
-      data: categoria
-    });
+    const dialogRef = this.dialog.open(
+      CategoriaForm,
+      {
+        width: '500px',
+        maxWidth: '95vw',
+        data: categoria
+      }
+    );
 
     dialogRef.afterClosed().subscribe(resultado => {
 
@@ -125,28 +202,121 @@ export class Categorias implements OnInit, AfterViewInit {
 
       if (resultado.id) {
 
-        this.categoriaService.editarCategoria(resultado.id, {
-          nome: resultado.nome,
-          descricao: resultado.descricao
-        }).subscribe({
-          next: () => this.listarCategorias(),
-          error: erro => console.error(erro)
-        });
+        this.editar(
+          resultado.id,
+          resultado.nome,
+          resultado.descricao
+        );
 
       } else {
 
-        this.categoriaService.cadastrarCategoria({
-          nome: resultado.nome,
-          descricao: resultado.descricao
-        }).subscribe({
-          next: () => this.listarCategorias(),
-          error: erro => console.error(erro)
-        });
+        this.cadastrar(
+          resultado.nome,
+          resultado.descricao
+        );
 
       }
 
     });
+  }
 
+  private cadastrar(
+    nome: string,
+    descricao: string
+  ): void {
+
+    this.carregando = true;
+
+    this.categoriaService
+      .cadastrarCategoria({
+        nome,
+        descricao
+      })
+      .subscribe({
+
+        next: () => {
+
+          this.mostrarMensagem(
+            'Categoria cadastrada com sucesso!'
+          );
+
+          this.listarCategorias();
+        },
+
+        error: (erro) => {
+
+          console.error(
+            'Erro ao cadastrar categoria:',
+            erro
+          );
+
+          this.carregando = false;
+
+          this.mostrarMensagem(
+            'Não foi possível cadastrar a categoria.'
+          );
+        }
+
+      });
+  }
+
+  private editar(
+    id: number,
+    nome: string,
+    descricao: string
+  ): void {
+
+    this.carregando = true;
+
+    this.categoriaService
+      .editarCategoria(
+        id,
+        {
+          nome,
+          descricao
+        }
+      )
+      .subscribe({
+
+        next: () => {
+
+          this.mostrarMensagem(
+            'Categoria atualizada com sucesso!'
+          );
+
+          this.listarCategorias();
+        },
+
+        error: (erro) => {
+
+          console.error(
+            'Erro ao atualizar categoria:',
+            erro
+          );
+
+          this.carregando = false;
+
+          this.mostrarMensagem(
+            'Não foi possível atualizar a categoria.'
+          );
+        }
+
+      });
+  }
+
+  private mostrarMensagem(
+    mensagem: string
+  ): void {
+
+    this.snackBar.open(
+      mensagem,
+      'Fechar',
+      {
+        duration: 3000,
+        horizontalPosition: 'right',
+        verticalPosition: 'top'
+      }
+    );
   }
 
 }

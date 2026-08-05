@@ -2,13 +2,17 @@
 
   <div class="topo">
 
-    <h2 style="color:red">TESTE 123</h2>
+    <h2>Categorias</h2>
 
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="novaCategoria()">
 
-<button mat-raised-button color="primary" (click)="novaCategoria()">
-  <mat-icon>add</mat-icon>
-  Nova Categoria
-</button>
+      <mat-icon>add</mat-icon>
+      Nova Categoria
+
+    </button>
 
   </div>
 
@@ -16,82 +20,148 @@
 
     <input
       type="text"
-      placeholder="Pesquisar categoria..."
+      placeholder="Pesquisar por nome ou descrição..."
       (keyup)="aplicarFiltro($event)">
 
   </div>
 
-  <table
-    mat-table
-    [dataSource]="dataSource"
-    matSort
-    class="mat-elevation-z2">
+  <!-- LOADING -->
+  <div class="loading" *ngIf="carregando">
 
-    <!-- ID -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        ID
-      </th>
+    <mat-spinner diameter="40"></mat-spinner>
 
-      <td mat-cell *matCellDef="let categoria">
-        {{ categoria.id }}
-      </td>
-    </ng-container>
+    <span>Carregando...</span>
 
-    <!-- Nome -->
-    <ng-container matColumnDef="nome">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        Nome
-      </th>
+  </div>
 
-      <td mat-cell *matCellDef="let categoria">
-        {{ categoria.nome }}
-      </td>
-    </ng-container>
+  <!-- TABELA -->
+  <div class="tabela-container" *ngIf="!carregando">
 
-    <!-- Descrição -->
-    <ng-container matColumnDef="descricao">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        Descrição
-      </th>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      class="mat-elevation-z2">
 
-      <td mat-cell *matCellDef="let categoria">
-        {{ categoria.descricao }}
-      </td>
-    </ng-container>
+      <!-- ID -->
+      <ng-container matColumnDef="id">
 
-    <!-- Ações -->
-    <ng-container matColumnDef="acoes">
-      <th mat-header-cell *matHeaderCellDef>
-        Ações
-      </th>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header>
+          ID
+        </th>
 
-      <td mat-cell *matCellDef="let categoria">
+        <td mat-cell *matCellDef="let categoria">
+          {{ categoria.id }}
+        </td>
 
-        <button
-  mat-icon-button
-  color="primary"
-  (click)="editarCategoria(categoria)">
-  <mat-icon>edit</mat-icon>
-</button>
+      </ng-container>
 
-        <button mat-icon-button color="warn">
-          <mat-icon>delete</mat-icon>
-        </button>
+      <!-- NOME -->
+      <ng-container matColumnDef="nome">
 
-      </td>
-    </ng-container>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header>
+          Nome
+        </th>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <td mat-cell *matCellDef="let categoria">
+          {{ categoria.nome }}
+        </td>
 
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </ng-container>
 
-  </table>
+      <!-- DESCRIÇÃO -->
+      <ng-container matColumnDef="descricao">
 
-  <mat-paginator
-    [pageSize]="5"
-    [pageSizeOptions]="[5, 10, 20]"
-    showFirstLastButtons>
-  </mat-paginator>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header>
+          Descrição
+        </th>
+
+        <td mat-cell *matCellDef="let categoria">
+          {{ categoria.descricao }}
+        </td>
+
+      </ng-container>
+
+      <!-- AÇÕES -->
+      <ng-container matColumnDef="acoes">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Ações
+        </th>
+
+        <td mat-cell *matCellDef="let categoria">
+
+          <!-- EDITAR -->
+          <button
+            mat-icon-button
+            color="primary"
+            title="Editar categoria"
+            (click)="editarCategoria(categoria)">
+
+            <mat-icon>edit</mat-icon>
+
+          </button>
+
+          <!-- EXCLUIR -->
+          <button
+            mat-icon-button
+            color="warn"
+            title="Excluir categoria"
+            (click)="excluirCategoria(categoria)">
+
+            <mat-icon>delete</mat-icon>
+
+          </button>
+
+        </td>
+
+      </ng-container>
+
+      <!-- CABEÇALHO -->
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns">
+      </tr>
+
+      <!-- LINHAS -->
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns">
+      </tr>
+
+      <!-- NENHUM RESULTADO -->
+      <tr
+        class="mat-row"
+        *matNoDataRow>
+
+        <td
+          class="mat-cell sem-resultados"
+          [attr.colspan]="displayedColumns.length">
+
+          Nenhuma categoria encontrada.
+
+        </td>
+
+      </tr>
+
+    </table>
+
+    <!-- PAGINAÇÃO -->
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons>
+    </mat-paginator>
+
+  </div>
 
 </mat-card>
