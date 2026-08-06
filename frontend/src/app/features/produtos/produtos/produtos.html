@@ -1,0 +1,157 @@
+<mat-card>
+
+  <div class="topo">
+
+    <h2>Produtos</h2>
+
+   <button
+  mat-raised-button
+  color="primary"
+  (click)="novoProduto()">
+
+  <mat-icon>add</mat-icon>
+  Novo Produto
+
+</button>
+
+  </div>
+
+  <div class="pesquisa">
+
+    <input
+      type="text"
+      placeholder="Pesquisar produto..."
+      (keyup)="aplicarFiltro($event)">
+
+  </div>
+
+  <div *ngIf="carregando">
+    Carregando produtos...
+  </div>
+
+  <table
+    *ngIf="!carregando"
+    mat-table
+    [dataSource]="dataSource"
+    matSort
+    class="mat-elevation-z2">
+
+    <ng-container matColumnDef="codigo">
+
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Código
+      </th>
+
+      <td mat-cell *matCellDef="let produto">
+        {{ produto.codigo }}
+      </td>
+
+    </ng-container>
+
+
+    <ng-container matColumnDef="nome">
+
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Produto
+      </th>
+
+      <td mat-cell *matCellDef="let produto">
+        {{ produto.nome }}
+      </td>
+
+    </ng-container>
+
+
+    <ng-container matColumnDef="categoria">
+
+      <th mat-header-cell *matHeaderCellDef>
+        Categoria
+      </th>
+
+      <td mat-cell *matCellDef="let produto">
+        {{ produto.categoriaNome || '-' }}
+      </td>
+
+    </ng-container>
+
+
+    <ng-container matColumnDef="preco">
+
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Preço
+      </th>
+
+      <td mat-cell *matCellDef="let produto">
+        {{ produto.preco | currency:'BRL' }}
+      </td>
+
+    </ng-container>
+
+
+    <ng-container matColumnDef="estoque">
+
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Estoque
+      </th>
+
+      <td mat-cell *matCellDef="let produto">
+        {{ produto.estoque }}
+      </td>
+
+    </ng-container>
+
+
+    <ng-container matColumnDef="ativo">
+
+      <th mat-header-cell *matHeaderCellDef>
+        Status
+      </th>
+
+      <td mat-cell *matCellDef="let produto">
+        {{ produto.ativo ? 'Ativo' : 'Inativo' }}
+      </td>
+
+    </ng-container>
+
+
+    <ng-container matColumnDef="acoes">
+
+      <th mat-header-cell *matHeaderCellDef>
+        Ações
+      </th>
+
+      <td mat-cell *matCellDef="let produto">
+
+        <button mat-icon-button color="primary">
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button mat-icon-button color="warn">
+          <mat-icon>delete</mat-icon>
+        </button>
+
+      </td>
+
+    </ng-container>
+
+
+    <tr
+      mat-header-row
+      *matHeaderRowDef="displayedColumns">
+    </tr>
+
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns">
+    </tr>
+
+  </table>
+
+
+  <mat-paginator
+    [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons>
+  </mat-paginator>
+
+</mat-card>
